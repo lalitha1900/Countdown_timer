@@ -1,25 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
 
-function App() {
+import React, { useState, useEffect } from "react";
+import DatePicker from "./components/DatePicker/DatePicker";
+import CountdownTimer from "./components/CountdownTimer/CountdownTimer";
+import "./App.css";
+
+const App = () => {
+  const [targetDate, setTargetDate] = useState(() => {
+    const savedDate = localStorage.getItem("targetDate");
+    return savedDate ? new Date(savedDate) : null;
+  });
+
+  useEffect(() => {
+    if (targetDate) {
+      localStorage.setItem("targetDate", targetDate);
+    } else {
+      localStorage.removeItem("targetDate");
+    }
+  }, [targetDate]);
+
+  const resetTimer = () => {
+    setTargetDate(null);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Countdown Timer</h1>
+      {targetDate ? (
+        <CountdownTimer targetDate={targetDate} resetTimer={resetTimer} />
+      ) : (
+        <DatePicker setTargetDate={setTargetDate} />
+      )}
     </div>
   );
-}
+};
 
 export default App;
